@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Ethics — Exam Trainer</title>
+<style>
+  :root{
+    --ink:#0B2545;--ink2:#13315C;--line:#3E6BAA;--line-soft:rgba(120,170,235,.22);
+    --card:#FFFFFF;--amber:#E8A33D;--amber-deep:#C9821B;--green:#2E7D5B;--green-soft:#E4F1EA;
+    --red:#C0432E;--red-soft:#FBE7E2;--muted:#5D6B82;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--ink);
+    background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+    background-size:32px 32px;color:#12203a;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;line-height:1.55}
+  .wrap{max-width:860px;margin:0 auto;padding:0 18px 80px}
+  header.hero{color:#EAF1FB;padding:52px 18px 28px;text-align:center;max-width:860px;margin:0 auto}
+  .kicker{font-family:"Courier New",monospace;letter-spacing:.32em;font-size:12px;color:#9EC1F0;text-transform:uppercase;margin-bottom:14px}
+  header.hero h1{font-size:38px;line-height:1.08;margin:0 0 10px;font-weight:800;letter-spacing:-.5px}
+  header.hero p{color:#B9CDEC;font-size:16px;max-width:600px;margin:0 auto}
+  .scoreboard{display:inline-flex;margin-top:24px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(255,255,255,.04)}
+  .scoreboard div{padding:12px 20px;text-align:center;border-right:1px solid var(--line)}
+  .scoreboard div:last-child{border-right:none}
+  .scoreboard b{display:block;font-size:24px;color:#fff;font-family:"Courier New",monospace}
+  .scoreboard span{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#9EC1F0}
+  .resetbtn{margin-top:16px;background:transparent;border:1px solid var(--line);color:#B9CDEC;border-radius:8px;padding:8px 16px;font-size:12.5px;cursor:pointer;font-family:inherit}
+  .resetbtn:hover{background:rgba(255,255,255,.06);color:#fff}
+  nav{position:sticky;top:0;z-index:20;background:rgba(11,37,69,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin-top:20px}
+  nav .navin{max-width:860px;margin:0 auto;display:flex;gap:4px;padding:8px 12px;overflow-x:auto}
+  nav button{white-space:nowrap;background:transparent;border:none;color:#B9CDEC;font-size:13.5px;font-weight:600;padding:9px 14px;border-radius:8px;cursor:pointer;font-family:inherit;transition:.15s}
+  nav button:hover{color:#fff;background:rgba(255,255,255,.06)}
+  nav button.active{background:var(--amber);color:#3a2600}
+  section.panel{display:none;padding-top:26px}
+  section.panel.show{display:block}
+  .lead{background:var(--card);border-radius:14px;padding:20px 22px;margin-bottom:20px;border-left:5px solid var(--amber)}
+  .lead h2{margin:0 0 6px;font-size:22px;color:var(--ink)}
+  .lead p{margin:0;color:var(--muted);font-size:14.5px}
+  .parthead{display:flex;align-items:center;gap:12px;margin:26px 4px 12px}
+  .parthead .pnum{font-family:"Courier New",monospace;font-weight:800;font-size:13px;color:#3a2600;background:var(--amber);border-radius:7px;padding:5px 10px}
+  .parthead h3{margin:0;color:#EAF1FB;font-size:18px;font-weight:700}
+  .parthead .cnt{margin-left:auto;font-size:12px;color:#9EC1F0;font-family:"Courier New",monospace}
+  .q{background:var(--card);border-radius:14px;padding:20px 22px;margin-bottom:14px;box-shadow:0 2px 0 rgba(11,37,69,.06)}
+  .qhead{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+  .qnum{flex:none;width:30px;height:30px;border-radius:8px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:"Courier New",monospace;font-weight:700;font-size:13px}
+  .qtext{font-size:15.5px;font-weight:600;color:#12203a}
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{text-align:left;border:1.5px solid #DCE4F0;background:#fff;border-radius:10px;padding:12px 14px;font-size:14.5px;cursor:pointer;font-family:inherit;color:#22314d;transition:.14s;display:flex;gap:10px;align-items:flex-start}
+  .opt:hover:not(.locked){border-color:var(--line);background:#F7FAFF}
+  .opt .lt{font-weight:700;font-family:"Courier New",monospace;color:var(--line);flex:none}
+  .opt.correct{background:var(--green-soft);border-color:var(--green);color:#12492f}
+  .opt.correct .lt{color:var(--green)}
+  .opt.wrong{background:var(--red-soft);border-color:var(--red);color:#6e241a}
+  .opt.wrong .lt{color:var(--red)}
+  .opt.locked{cursor:default}
+  .tf-btns{display:flex;gap:10px}
+  .tf-btns .opt{flex:1;justify-content:center;font-weight:700;font-size:15px}
+  .expl{margin-top:14px;padding:13px 15px;border-radius:10px;font-size:14px;display:none;background:#F1F5FB;border-left:4px solid var(--line);line-height:1.6}
+  .expl.show{display:block}
+  .expl .verdict{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:12px;margin-bottom:5px;font-family:"Courier New",monospace}
+  .expl.right .verdict{color:var(--green)}
+  .expl.rong .verdict{color:var(--red)}
+  .case{background:var(--card);border-radius:14px;padding:22px 24px;margin-bottom:18px}
+  .case .clabel{font-family:"Courier New",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber-deep);font-weight:700;margin-bottom:6px}
+  .case h3{margin:0 0 10px;font-size:19px;color:var(--ink)}
+  .case .scenario{font-size:14.8px;color:#22314d;margin-bottom:14px}
+  .reveal-btn{background:var(--ink);color:#fff;border:none;border-radius:9px;padding:11px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+  .reveal-btn:hover{background:var(--ink2)}
+  .model{display:none;margin-top:18px;border-top:1px dashed #C6D2E6;padding-top:16px}
+  .model.show{display:block}
+  .model .step{margin-bottom:13px}
+  .model .step .st{font-family:"Courier New",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--line);font-weight:700;margin-bottom:3px}
+  .model .step p{margin:0;font-size:14px;color:#26364f;line-height:1.6}
+  .strat-hero{background:linear-gradient(135deg,var(--ink),var(--ink2));color:#EAF1FB;border-radius:16px;padding:26px;margin-bottom:22px}
+  .strat-hero h2{margin:0 0 8px;font-size:24px}
+  .strat-hero p{margin:0;color:#B9CDEC;font-size:14.5px}
+  .flow{counter-reset:step}
+  .flowstep{background:var(--card);border-radius:13px;padding:18px 20px 18px 62px;margin-bottom:12px;position:relative}
+  .flowstep::before{counter-increment:step;content:counter(step);position:absolute;left:16px;top:18px;width:32px;height:32px;background:var(--amber);color:#3a2600;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:"Courier New",monospace;font-size:16px}
+  .flowstep h4{margin:0 0 5px;font-size:16px;color:var(--ink)}
+  .flowstep p{margin:0 0 6px;font-size:14px;color:#26364f}
+  .flowstep .ask{font-size:13.5px;color:var(--muted);font-style:italic}
+  .callout{background:var(--green-soft);border-radius:13px;padding:18px 20px;margin:20px 0;border-left:5px solid var(--green)}
+  .callout h4{margin:0 0 8px;color:#1c5a3c;font-size:16px}
+  .callout ul{margin:0;padding-left:20px;font-size:14px;color:#1f4736}
+  .callout li{margin-bottom:6px}
+  .warnbox{background:var(--red-soft);border-radius:13px;padding:18px 20px;margin:20px 0;border-left:5px solid var(--red)}
+  .warnbox h4{margin:0 0 8px;color:#8a2f20;font-size:16px}
+  .warnbox ul{margin:0;padding-left:20px;font-size:14px;color:#6e241a}
+  .warnbox li{margin-bottom:6px}
+  .gstep{background:var(--card);border-radius:12px;padding:15px 18px;margin-bottom:10px;border-left:4px solid var(--amber)}
+  .gstep h4{margin:0 0 4px;font-size:15px;color:var(--ink)}
+  .gstep p{margin:0;font-size:14px;color:#26364f}
+  footer{text-align:center;color:#7f95b8;font-size:12.5px;padding:30px 18px 10px}
+  @media(max-width:560px){header.hero h1{font-size:29px}.scoreboard div{padding:10px 12px}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="kicker">Engineering Ethics &amp; Academic Integrity</div>
+  <h1>Exam Trainer</h1>
+  <p>A large practice bank across all six parts, with a teaching explanation on every question — right or wrong. Options reshuffle each reload, so there's no answer pattern to memorize. Plus a full-marks method for any case study.</p>
+  <div class="scoreboard">
+    <div><b id="scoreCorrect">0</b><span>Correct</span></div>
+    <div><b id="scoreAnswered">0</b><span>Answered</span></div>
+    <div><b id="scoreTotal">0</b><span>Questions</span></div>
+  </div>
+  <br><button class="resetbtn" onclick="location.reload()">↻ Reshuffle &amp; restart</button>
+</header>
+<nav><div class="navin">
+  <button class="active" data-tab="mcq">Multiple Choice</button>
+  <button data-tab="tf">True / False</button>
+  <button data-tab="cases">Case Studies</button>
+  <button data-tab="strategy">★ Universal Method</button>
+  <button data-tab="fullmarks">Full-Marks Guide</button>
+</div></nav>
+<div class="wrap">
+  <section class="panel show" id="mcq">
+    <div class="lead"><h2>Multiple Choice</h2><p>Grouped by course part. Tap an answer to lock it and reveal a detailed explanation you can learn from. Options shuffle every reload.</p></div>
+    <div id="mcqList"></div>
+  </section>
+  <section class="panel" id="tf">
+    <div class="lead"><h2>True / False</h2><p>Grouped by course part. Each answer includes the full reasoning so a wrong guess still teaches the concept.</p></div>
+    <div id="tfList"></div>
+  </section>
+  <section class="panel" id="cases">
+    <div class="lead"><h2>Case Studies</h2><p>Ten cases spanning the whole syllabus. Draft your own answer with the Universal Method, then reveal the model analysis to compare.</p></div>
+    <div id="caseList"></div>
+  </section>
+  <section class="panel" id="strategy">
+    <div class="strat-hero"><h2>The Universal Case Method</h2><p>Every case on this exam — whatever the topic — yields to the same six-move sequence. Memorise the moves, not the cases.</p></div>
+    <div class="flow" id="flowSteps"></div>
+    <div class="callout"><h4>✓ Reusable moves that earn points in almost any case</h4><ul>
+      <li><b>Put public welfare first.</b> When any duty conflicts with employer loyalty, public safety, health, and welfare win — say it explicitly.</li>
+      <li><b>Name both kinds of justice.</b> Distributive (benefits vs. burdens) and procedural (was the process fair, informed, participatory).</li>
+      <li><b>Diagnose failure at three levels.</b> Personal, cognitive, organizational barriers — then fix each.</li>
+      <li><b>Count the externalities.</b> Pollution, displacement, long-term and irreversible effects off the balance sheet.</li>
+      <li><b>Always end with prevention.</b> Personal + organizational + institutional causes, a policy with owners and triggers, and how you'd implement it.</li>
+      <li><b>Drop the vocabulary:</b> risk = probability × loss, informed consent, data minimization, due care, FFP, duty of care, digital divide.</li>
+    </ul></div>
+    <div class="warnbox"><h4>✗ Traps that lose points</h4><ul>
+      <li>"It's technically fine, so it's acceptable." Feasibility never equals acceptability.</li>
+      <li>Choosing a side before weighing the conflicting values.</li>
+      <li>Stopping at "report it" without naming the channel and the fallback (escalate to the regulator).</li>
+      <li>Forgetting the people with no voice — usually the point of the case.</li>
+      <li>Ending with no prevention or policy. A case answer that doesn't look forward is incomplete.</li>
+    </ul></div>
+    <div class="callout" style="background:#EBF1FA;border-left-color:var(--line)"><h4 style="color:var(--ink2)">One-line memory hook</h4>
+      <ul style="color:var(--ink2)"><li style="list-style:none;font-size:15px"><b>F-S-C-P-D-P:</b> Facts → Stakeholders → Conflict → Principles → Decision → Prevention.</li></ul></div>
+  </section>
+  <section class="panel" id="fullmarks">
+    <div class="strat-hero"><h2>How to Study &amp; Score Full Marks</h2><p>Two things win case marks: preparing the right way, and structuring the answer the way the rubric rewards. Here is both.</p></div>
+    <h3 style="color:#EAF1FB;margin:6px 4px 12px">Part A — How to study case studies</h3>
+    <div id="guideStudy"></div>
+    <h3 style="color:#EAF1FB;margin:24px 4px 12px">Part B — How to write a full-marks answer</h3>
+    <div id="guideAnswer"></div>
+    <div class="callout"><h4>The 6-line answer skeleton (write this every time)</h4><ul>
+      <li><b>Line 1 — Conflict:</b> "This case pits ___ against ___."</li>
+      <li><b>Line 2 — Facts &amp; roles:</b> what happened; who holds knowledge/power; what's hidden.</li>
+      <li><b>Line 3 — Stakeholders:</b> who benefits, who bears the burden, who has no voice.</li>
+      <li><b>Line 4 — Principles:</b> name the framework(s) with exact vocabulary.</li>
+      <li><b>Line 5 — Decision:</b> the defensible action + fallback (regulator) + public welfare first.</li>
+      <li><b>Line 6 — Prevention:</b> causes at 3 levels + one enforceable policy with an owner.</li>
+    </ul></div>
+  </section>
+</div>
+<footer>Built from your course summary · Score resets on reload · Not affiliated with your instructor</footer>
+<script>
+
+/* ============================================================
+   ENGINEERING ETHICS & ACADEMIC INTEGRITY — FULL QUESTION BANK
+   Option index 0 is always the correct answer (shuffled at render).
+   Explanations are written to TEACH the concept, not just mark it.
+   ============================================================ */
+
+const PARTS=[
+ "Engineering &amp; Ethics: Technology as Social Choice",
+ "Risk &amp; Responsibility: Acting under Uncertainty",
+ "Value &amp; Justice: Benefits, Burdens, and Access",
+ "Professional Ethics: Judgment &amp; Public Welfare",
+ "Data Ethics: Rights, Bias, Security, Governance",
+ "Decision-Making &amp; Integrity: Building Trust"
+];
+
+const MCQ=[
+/* ================= PART 1 ================= */
+{p:0,q:"A bridge design meets every building code and passes all load tests, so the lead engineer says it is therefore ethically fine to build. What is the flaw?",
+ o:["Technical feasibility does not by itself establish ethical acceptability",
+    "Building codes have nothing to do with real engineering",
+    "Load tests are unreliable and should be ignored",
+    "Ethics only becomes relevant after something fails"],
+ e:"This is THE central claim of the whole course. Meeting codes and passing tests shows the design is technically feasible — it will stand up. But 'can it be built safely?' is a different question from 'should it be built, here, this way, for these people?' Ethical acceptability also requires asking who benefits, who bears the risk, whether they consented, and what the long-term and irreversible effects are. Feasibility is necessary but never sufficient."},
+{p:0,q:"In this course, engineering is best understood as:",
+ o:["A social practice that connects people, nature, and institutions",
+    "A purely technical activity governed only by the laws of physics",
+    "A branch of applied mathematics with no social dimension",
+    "A neutral activity that never affects society"],
+ e:"Engineering is framed as a SOCIAL PRACTICE, not just a technical one. Every project links human beings, the natural environment, and institutions (companies, governments, regulators). Because it reshapes how people live and who is exposed to what, it is unavoidably bound up with values, power, and responsibility — which is exactly why it needs ethics."},
+{p:0,q:"'Every engineering decision distributes benefits, risks, power, and responsibility.' The main ethical implication is that:",
+ o:["Engineering choices are never socially neutral, even when unintended",
+    "Engineers should only care about profit",
+    "Only governments bear responsibility for technology",
+    "Distribution effects can always be ignored"],
+ e:"Because a single design decision hands benefits to some groups and risks to others — and concentrates power and responsibility in particular hands — no engineering choice is socially 'neutral.' Even when nobody intends harm, the distribution itself has moral weight. Recognising this is the first step toward taking responsibility for who wins and who loses."},
+{p:0,q:"Which trio correctly lists the three defining features of engineering ethics?",
+ o:["Multiple values, multiple actors, and uncertainty",
+    "Cost, schedule, and quality",
+    "Design, construction, and maintenance",
+    "Physics, chemistry, and mathematics"],
+ e:"These three features are why engineering ethics is hard. (1) Multiple values — economic, scientific, political, social, cultural, ecological goals that pull in different directions. (2) Multiple actors — engineers, firms, governments, users, communities, all affected unequally. (3) Uncertainty — you can never fully predict technical, environmental, and human consequences. Cost/schedule/quality is a project-management triangle, not the ethics features."},
+{p:0,q:"Cost-vs-safety and growth-vs-environment are examples of which feature of engineering ethics?",
+ o:["Conflicting values",
+    "Uncertainty",
+    "Reproducibility",
+    "Data minimization"],
+ e:"They illustrate the 'multiple values in conflict' feature. Engineering serves economic, social, ecological, political, cultural, and scientific goals at once, and these routinely collide — cheaper vs. safer, faster growth vs. protecting the environment. Ethics is needed precisely because you cannot maximise all values simultaneously and must justify the trade-off."},
+{p:0,q:"A single dam affects a power utility, the government, downstream farmers, and displaced villagers at the same time. This best illustrates:",
+ o:["Multiple actors with unequal stakes",
+    "A purely technical problem",
+    "Mathematical uncertainty",
+    "Continuous improvement"],
+ e:"This is the 'multiple actors' feature. One project touches many parties who have very different amounts of power and very different exposure to benefit and harm. The displaced villagers often have the least voice yet bear the most burden — which is why identifying all affected actors, especially the voiceless, is a core ethical skill."},
+{p:0,q:"'Uncertainty' as a defining feature of engineering ethics arises mainly from:",
+ o:["Technical, environmental, and human factors interacting",
+    "Only rounding errors in calculations",
+    "Only errors in weather forecasting",
+    "Only mistakes in cost estimates"],
+ e:"Uncertainty is broad: technical factors (component failure, unforeseen interactions), environmental factors (extreme events beyond design assumptions), and human factors (error, misuse, organizational pressure) all make outcomes impossible to predict perfectly. Because you must act despite not knowing everything, prudence, safety margins, and monitoring become ethical duties."},
+{p:0,q:"In the four-step defensible decision method, the FIRST step is to:",
+ o:["Clarify the facts, roles, actions, and relationships",
+    "Decide immediately what to do",
+    "Compare ethical theories",
+    "Choose the cheapest option"],
+ e:"Step 1 is Clarify Facts. Before you can judge anything you must establish what actually happened, who did what, who holds power and knowledge, and how the parties relate. Jumping to a decision before the facts are clear is the most common way case answers go wrong. Facts first, judgement later."},
+{p:0,q:"At which step of the four-step method do you name the ethical problem and the values in conflict?",
+ o:["Identify the issue",
+    "Clarify the facts",
+    "Compare",
+    "Decide and justify"],
+ e:"Step 2, Identify the Issue, is where you state precisely what the ethical problem is and which values are colliding (e.g., 'public safety vs. schedule pressure'). Naming the conflict sharply is what turns a vague 'this feels wrong' into an analysable problem you can then compare options against."},
+{p:0,q:"The 'Compare' step of the defensible decision method involves weighing:",
+ o:["Professional standards, stakeholder impacts, policies, and ethical theories",
+    "Only the project budget",
+    "Only your manager's preference",
+    "Only the fastest option"],
+ e:"Step 3, Compare, is the analytical heart. You weigh the options against professional standards and codes, the impacts on each stakeholder, relevant laws and policies, and ethical theories (consequences, duties, rights, fairness). Comparing across all of these — not just one lens — is what makes the eventual decision defensible."},
+{p:0,q:"The final step, 'Decide and justify,' requires you to:",
+ o:["Choose an action, give reasons others would accept, and propose future improvements",
+    "List the facts and stop",
+    "Pick whatever avoids conflict with your boss",
+    "Delay the decision indefinitely"],
+ e:"Step 4 is Decide & Justify. You commit to an action, explain the reasoning so that a reasonable outsider could accept it (public defensibility), and — crucially — propose how to prevent the problem in future. A decision without justification and without a forward-looking fix is incomplete by this method's standard."},
+{p:0,q:"The correct order of the four-step defensible decision method is:",
+ o:["Clarify facts → Identify issue → Compare → Decide &amp; justify",
+    "Decide → Compare → Identify → Clarify",
+    "Identify → Decide → Clarify → Compare",
+    "Compare → Clarify → Decide → Identify"],
+ e:"Remember it as FICD: Facts → Issue → Compare → Decide. This ordering matters: you can't identify the real issue without the facts, can't compare options without knowing the issue, and can't justify a decision without comparison. Graders look for this skeleton in case answers."},
+{p:0,q:"Which of the following is NOT one of the kinds of value engineering creates?",
+ o:["Astrological value",
+    "Economic value",
+    "Ecological value",
+    "Social and cultural value"],
+ e:"Engineering generates economic, scientific, political, social, cultural, and ecological value — a wide spectrum that is exactly why values conflict. 'Astrological value' is not among them; the point of listing the real categories is to see that a project judged only on economics may be destroying value in social or ecological terms."},
+{p:0,q:"Saying a technology is 'technically brilliant but ethically unacceptable' is coherent because:",
+ o:["Feasibility and acceptability are separate judgments",
+    "It is actually a contradiction",
+    "Brilliant technology is always ethical",
+    "Ethics is decided only by engineers"],
+ e:"It's coherent precisely because the course separates 'can we build it well?' (feasibility) from 'should we, given who it affects?' (acceptability). A brilliantly engineered surveillance or weapons system can be deeply unacceptable. Keeping these two axes distinct is the analytical move behind almost every Part 1 question."},
+{p:0,q:"Why does the course insist engineers cannot hide behind 'I just built what I was told'?",
+ o:["Because their choices distribute risk and responsibility, giving them moral agency",
+    "Because engineers are legally always at fault",
+    "Because managers never make decisions",
+    "Because ethics forbids teamwork"],
+ e:"Since engineering decisions distribute benefits, risks, power, and responsibility, the engineer is a genuine moral agent, not a passive tool. 'I only followed orders' ignores that they shaped the distribution of harm. This is the foundation for later ideas like proactive responsibility and whistleblowing."},
+
+/* ================= PART 2 ================= */
+{p:1,q:"In this course, risk is defined by the relationship:",
+ o:["Risk = probability × loss",
+    "Risk = loss ÷ probability",
+    "Risk = hazard + exposure",
+    "Risk = cost × schedule"],
+ e:"Risk = probability × loss. This matters because it captures why a very unlikely event can still be an unacceptable risk: if the loss is catastrophic (deaths, irreversible harm), even a tiny probability yields serious risk. It also warns against dismissing 'rare' failures as negligible when the potential harm is severe."},
+{p:1,q:"Aging components, sensor failures, and tightly coupled control systems are examples of:",
+ o:["Technical uncertainty",
+    "Environmental uncertainty",
+    "Human uncertainty",
+    "Procedural injustice"],
+ e:"These are TECHNICAL sources of risk — they arise from the artifact itself: parts wearing out, sensors misreading, and 'tight coupling' where one failure rapidly cascades into others. Recognising the source matters because the fix differs: technical risk calls for redundancy, margins, inspection, and better design."},
+{p:1,q:"A tsunami that exceeds a plant's original design assumptions is which source of risk?",
+ o:["Environmental uncertainty",
+    "Technical uncertainty",
+    "Human uncertainty",
+    "Continuous improvement"],
+ e:"This is ENVIRONMENTAL uncertainty: earthquakes, floods, storms, and extreme conditions that go beyond the thresholds the system was designed for. The ethical lesson is humility about design assumptions — nature can exceed them — so conservative margins and emergency planning are part of responsible engineering."},
+{p:1,q:"A failure caused by managers pressuring staff to skip inspections is classified as:",
+ o:["Human uncertainty",
+    "Technical uncertainty",
+    "Environmental uncertainty",
+    "Acceptable risk"],
+ e:"This is HUMAN uncertainty: design bias, poor construction quality, organizational pressure, and communication failure. It's often the deepest cause of disasters because it can defeat good technical design. It connects directly to Part 4's barriers (authority pressure, groupthink) — human factors create risk."},
+{p:1,q:"Reducing foreseeable harm BEFORE deployment rather than reacting after an accident is the requirement called:",
+ o:["Prevention first",
+    "Continuous improvement",
+    "Fair distribution",
+    "Institutional safeguards"],
+ e:"'Prevention first' says the primary duty is to stop foreseeable harm ahead of time, not to compensate after it happens. Waiting for an accident to 'prove' a risk is real is ethically backwards when the harm was foreseeable. This is why engineers should fix known defects before launch, not patch later."},
+{p:1,q:"Treating affected people as mere numbers in a cost-benefit calculation violates which requirement?",
+ o:["Human welfare first",
+    "Holistic assessment",
+    "Continuous improvement",
+    "Institutional safeguards"],
+ e:"'Human welfare first' holds that people are ends in themselves, never just cost variables to be offset against savings. A calculation that would accept foreseeable deaths because the payout is 'cheaper' than a fix violates this directly. Human life and safety are not simply tradeable line items."},
+{p:1,q:"Evaluating technical, social, AND ecological effects together — not just the engineering spec — is:",
+ o:["Holistic assessment",
+    "Prevention first",
+    "Fair distribution",
+    "Data minimization"],
+ e:"'Holistic assessment' requires looking at the whole picture: not only will it work technically, but what are the social and ecological consequences? A narrow technical evaluation can miss pollution, displacement, or long-term harm. Holistic assessment is the antidote to 'microscopic vision' at the system level."},
+{p:1,q:"Law, regulatory oversight, accountability structures, and emergency planning are together the requirement of:",
+ o:["Institutional safeguards",
+    "Continuous improvement",
+    "Human welfare first",
+    "Fair distribution"],
+ e:"'Institutional safeguards' means acceptable risk depends on more than one engineer's good intentions — it needs external structures: laws, regulators, clear accountability, and emergency plans. These catch failures that individuals miss and ensure someone is answerable. Safety is a system property, not just a personal virtue."},
+{p:1,q:"The requirement that risk bearers receive information, a voice, and compensation is:",
+ o:["Fair distribution",
+    "Prevention first",
+    "Holistic assessment",
+    "Serve society"],
+ e:"'Fair distribution' addresses justice within risk: those who carry the risk of a project deserve to be informed, to participate, and to be compensated. Imposing risk on a community that gets none of the benefit and no say is unfair even if the aggregate math looks positive. This links Part 2 to the justice ideas of Part 3."},
+{p:1,q:"Monitoring performance, learning from near-misses, and revising a design over its life is:",
+ o:["Continuous improvement",
+    "Institutional safeguards",
+    "Human welfare first",
+    "Prevention first"],
+ e:"'Continuous improvement' recognises that safety is never 'done.' You watch the system in operation, treat near-misses as warnings, and update the design and procedures. Ignoring early warning signs (a recurring theme in real disasters) violates this requirement."},
+{p:1,q:"Which is NOT one of the six requirements for acceptable risk?",
+ o:["Maximizing shareholder return",
+    "Human welfare first",
+    "Prevention first",
+    "Fair distribution"],
+ e:"The six are: human welfare first, prevention first, holistic assessment, institutional safeguards, fair distribution, and continuous improvement. Maximising shareholder return is a business goal, not a condition for a risk to be ethically acceptable. Watch for distractors that swap in profit-oriented language."},
+{p:1,q:"'Risk = probability × loss' is used mainly during which stage of the risk-governance cycle?",
+ o:["Identify and assess",
+    "Communicate and decide",
+    "Respond and monitor",
+    "Compensate and close"],
+ e:"The formula belongs to Identify & Assess, where you quantify and prioritise risks by combining likelihood with severity, and analyse causes, consequences, and how failures interconnect. The later stages (communicate/decide, respond/monitor) act on what this assessment reveals."},
+{p:1,q:"Disclosing information and involving experts, government, the public, and stakeholders happens in which governance stage?",
+ o:["Communicate and decide",
+    "Identify and assess",
+    "Respond and monitor",
+    "Design and build"],
+ e:"Communicate & Decide is the participatory stage: risk information must be shared openly, and decisions should include the affected parties, not be made behind closed doors. Transparency and inclusion here are what make the eventual decision legitimate and fair."},
+{p:1,q:"Warnings, emergency plans, accountability, and ongoing learning belong to which governance stage?",
+ o:["Respond and monitor",
+    "Identify and assess",
+    "Communicate and decide",
+    "Acquire and clean"],
+ e:"Respond & Monitor is the stage of acting and watching: putting warning systems and emergency plans in place, assigning accountability, reviewing outcomes, and learning continuously. Its presence is what proves risk governance is a CYCLE, not a one-time approval."},
+{p:1,q:"That governance includes a 'respond and monitor' stage shows risk management is best understood as:",
+ o:["A continuous cycle across the system's whole life",
+    "A single sign-off before construction",
+    "A one-time legal formality",
+    "Something needed only after a disaster"],
+ e:"Because the process loops back through monitoring and revision, risk governance is a continuous cycle: identify/assess → communicate/decide → respond/monitor → and around again. Treating it as a one-off approval before construction is a classic exam trap and a real-world cause of accidents."},
+{p:1,q:"Meeting — and where necessary exceeding — technical standards and the duty of care is which responsibility layer?",
+ o:["Professional responsibility",
+    "Social responsibility",
+    "Environmental responsibility",
+    "Collective responsibility"],
+ e:"Professional responsibility is the baseline layer: uphold technical standards and the duty of care, and go beyond the minimum when safety demands it. It's the engineer's core competence-based duty, on top of which the social, environmental, and collective layers are built."},
+{p:1,q:"Placing public safety, health, and welfare ABOVE loyalty to your organization is which layer?",
+ o:["Social responsibility",
+    "Professional responsibility",
+    "Environmental responsibility",
+    "Collective responsibility"],
+ e:"Social responsibility ranks the public's safety, health, and welfare above organizational loyalty. This is the principle that justifies challenging your employer, refusing to sign off on unsafe work, and — as a last resort — whistleblowing. 'The public comes first' is one of the most testable ideas in the course."},
+{p:1,q:"Considering ecosystems, future generations, and sustainability is which responsibility layer?",
+ o:["Environmental responsibility",
+    "Professional responsibility",
+    "Social responsibility",
+    "Collective responsibility"],
+ e:"Environmental responsibility extends the circle of concern to ecosystems, people not yet born, and long-term sustainability. It pushes engineers to weigh irreversible and long-horizon effects, not just immediate human users — connecting risk analysis to justice across generations."},
+{p:1,q:"Clear roles, communication, supervision, and organizational accountability describe which layer?",
+ o:["Collective responsibility",
+    "Professional responsibility",
+    "Social responsibility",
+    "Environmental responsibility"],
+ e:"Collective responsibility recognises that modern engineering is done by organizations, so responsibility must be structured: defined roles, good communication, supervision, and accountability so things don't fall through the cracks. It prevents the 'everyone assumed someone else would handle it' failure."},
+
+/* ================= PART 3 ================= */
+{p:2,q:"Saying technology is 'often morally neutral as a tool' means its ethical value depends mainly on:",
+ o:["Purpose, use, and context",
+    "Its manufacturing cost",
+    "The fame of its inventor",
+    "Its physical size"],
+ e:"A hammer can build or harm; the tool itself is often neutral, and its moral value comes from purpose, use, and context. This matters because it blocks two lazy conclusions: 'technology is always good' and 'technology is always bad.' The ethical question is always HOW and WHY it is used, and on whom."},
+{p:2,q:"The same facial-recognition system can find missing children or enable mass surveillance. This illustrates:",
+ o:["Technology's value is double-edged and context-dependent",
+    "Technology is always beneficial",
+    "Technology is always harmful",
+    "Technology has no social effects"],
+ e:"This is the 'double-edged value' idea: identical capability yields opposite ethical outcomes depending on purpose, governance, and context. It's why you can't judge a technology in the abstract — you must ask who controls it, for what end, with what safeguards, affecting whom."},
+{p:2,q:"Pollution, displacement, and health risks not shown on a project's balance sheet are called:",
+ o:["Externalities (social costs)",
+    "Fixed assets",
+    "Retained earnings",
+    "Procedural safeguards"],
+ e:"Externalities are costs imposed on others and the environment that the project's own accounting ignores. Ethical evaluation must 'internalise' them — count the pollution, displacement, and health damage — because a project that looks profitable on paper may be destroying value for people who never agreed to bear it."},
+{p:2,q:"A waste plant benefits an entire city but concentrates danger on one nearby town. This is:",
+ o:["A NIMBY conflict rooted in distributive injustice",
+    "Groupthink",
+    "Technical uncertainty",
+    "Data minimization"],
+ e:"NIMBY ('Not In My Back Yard') names the structure where benefits are dispersed across many but burdens concentrate on a few nearby — a distributive-justice problem. The nearby community often has the least power and the most exposure, which is why fair distribution and participation matter so much here."},
+{p:2,q:"The right to know, informed consent, and meaningful participation together define:",
+ o:["Procedural justice",
+    "Distributive justice",
+    "Continuous improvement",
+    "Due care"],
+ e:"Procedural justice is about the FAIRNESS OF THE PROCESS: were affected people informed, did they consent, could they genuinely participate? A decision can distribute burdens 'reasonably' yet still be unjust if it was made secretly, without consent or voice. Process fairness is a value in its own right."},
+{p:2,q:"Distributive justice, in contrast to procedural justice, asks primarily:",
+ o:["Who receives the benefits and who bears the burdens",
+    "Whether the meeting minutes were accurate",
+    "Whether the data was encrypted",
+    "Whether the schedule was met"],
+ e:"Distributive justice concerns the OUTCOME — the allocation of benefits and burdens across groups. Procedural justice concerns the PROCESS — was it fair and participatory. Strong case answers separate these two explicitly, because a case can fail on one, the other, or both."},
+{p:2,q:"Why does the course stress identifying stakeholders 'with little voice'?",
+ o:["They often bear the greatest burden yet are most easily ignored",
+    "They are legally unimportant",
+    "They never affect outcomes",
+    "Only shareholders matter"],
+ e:"Vulnerable, low-power stakeholders — displaced residents, downstream communities, future generations — typically absorb the heaviest burdens while having the least ability to object. Ethical stakeholder analysis deliberately surfaces them, because a decision that ignores the voiceless is where injustice usually hides."},
+{p:2,q:"Assessing impacts before approval and re-evaluating outcomes after implementation is:",
+ o:["Compensation and review",
+    "Data minimization",
+    "Microscopic vision",
+    "Groupthink"],
+ e:"'Compensation and review' has two moments: evaluate likely impacts and arrange fair compensation BEFORE approval, then REVISIT actual outcomes after the project is running to correct for harms that appear. It builds humility and correction into justice — you don't just decide once and walk away."},
+{p:2,q:"Ethical evaluation of a project should extend beyond efficiency and profit to include:",
+ o:["Long-term effects, externalities, and irreversible consequences",
+    "Only the quarterly return",
+    "Only the construction schedule",
+    "Only the engineer's reputation"],
+ e:"Because value is double-edged and externalities are real, judgement must weigh long-term, external, and irreversible effects — not just short-term efficiency and profit. Irreversibility is especially important: some harms (a flooded valley, an extinct species, a lost community) can never be undone, which raises the ethical stakes."},
+{p:2,q:"'Legal' and 'ethically acceptable' can come apart because:",
+ o:["Laws and permits may lag behind current knowledge and fairness",
+    "Anything legal is automatically ethical",
+    "Ethics has no standards at all",
+    "Laws are always stricter than ethics"],
+ e:"Legality is a floor, not a ceiling. Permits can be outdated, laws can be weaker than what current science or fairness requires, and 'within the letter of the law' can still impose undisclosed harm on a community. Recognising this gap is essential for cases where a company hides behind 'but it's legal.'"},
+{p:2,q:"Which best captures the ethical response to a project with large public benefit but concentrated local harm?",
+ o:["Inform and involve the affected community, share benefits, and compensate fairly",
+    "Proceed silently because the majority benefits",
+    "Cancel all beneficial projects",
+    "Ignore the local community entirely"],
+ e:"The point is NOT that beneficial projects must be cancelled, but that they must be done justly: disclose the impacts, give the affected community a genuine voice, share benefits, and compensate fairly. This satisfies both distributive justice (fair burdens) and procedural justice (fair process), making the project publicly defensible."},
+
+/* ================= PART 4 ================= */
+{p:3,q:"Following professional standards and preventing foreseeable harm is which level of professional responsibility?",
+ o:["Duty and due care",
+    "Negligence and accountability",
+    "Proactive responsibility",
+    "Collective bargaining"],
+ e:"'Duty and due care' is the baseline level: competently follow professional standards and take reasonable steps to prevent harm you can foresee. It's the minimum a responsible professional owes. The next levels build on it by adding accountability for failure and proactive prevention."},
+{p:3,q:"Accepting responsibility for avoidable error, omission, and organizational failure is:",
+ o:["Negligence and accountability",
+    "Duty and due care",
+    "Proactive responsibility",
+    "Data minimization"],
+ e:"The middle level, 'negligence and accountability,' is about owning failures — including omissions and failures rooted in the organization, not just your personal slips. It resists the excuse 'it wasn't only my fault,' recognising that avoidable harm carries responsibility even when many hands contributed."},
+{p:3,q:"Disclosing a risk and challenging an unsafe decision BEFORE harm occurs is:",
+ o:["Proactive responsibility",
+    "Negligence",
+    "Due-care minimalism",
+    "Microscopic vision"],
+ e:"Proactive responsibility is the highest level: you don't wait to be blamed after the fact — you actively surface risks, challenge unsafe choices, and protect the public in advance, up to whistleblowing if internal channels fail. This is the engineer as an active guardian of public welfare, the ideal the course points toward."},
+{p:3,q:"Focusing on one's own narrow task while ignoring system-level effects is called:",
+ o:["Microscopic vision (a cognitive barrier)",
+    "Groupthink",
+    "Due care",
+    "Whistleblowing"],
+ e:"'Microscopic vision' is a COGNITIVE barrier: you zoom in on your slice of the work and lose sight of how it affects the whole system and the public. Paired with egocentrism, it explains how well-meaning specialists each do 'their part' correctly while a disaster assembles across the gaps. The cure is deliberately widening your view."},
+{p:3,q:"A team silences a member's safety concern to keep everyone in agreement. This is:",
+ o:["Groupthink (an organizational barrier)",
+    "Microscopic vision",
+    "Procedural justice",
+    "Continuous improvement"],
+ e:"Groupthink is an ORGANIZATIONAL barrier: the desire for harmony and consensus suppresses dissent and critical evaluation, so warnings get buried. It's dangerous because the group feels confident precisely when it has stopped listening to its own doubters. Protecting and rewarding dissent is the countermeasure."},
+{p:3,q:"Self-interest, fear, self-deception, and ignorance are grouped as:",
+ o:["Personal barriers",
+    "Cognitive barriers",
+    "Organizational barriers",
+    "Environmental barriers"],
+ e:"These are PERSONAL barriers to responsible action — they live inside the individual: wanting to protect your job (self-interest), fear of retaliation, talking yourself out of the problem (self-deception), or simply not knowing (ignorance). Naming them helps you notice and overcome them in yourself."},
+{p:3,q:"Egocentrism and microscopic vision are examples of:",
+ o:["Cognitive barriers",
+    "Personal barriers",
+    "Organizational barriers",
+    "Technical uncertainty"],
+ e:"These are COGNITIVE barriers — distortions in how we perceive and think: seeing only from our own standpoint (egocentrism) and only our narrow task (microscopic vision). They aren't moral failings exactly; they're perceptual blind spots, which is why structured wide-angle review and outside perspectives are needed to counter them."},
+{p:3,q:"Authority pressure, information silos, and groupthink are examples of:",
+ o:["Organizational barriers",
+    "Personal barriers",
+    "Cognitive barriers",
+    "Environmental uncertainty"],
+ e:"These are ORGANIZATIONAL barriers — features of the workplace structure that block responsible action: pressure from superiors, departments that don't share information (silos), and consensus that suppresses criticism (groupthink). Fixing them requires changing structures and culture, not just individual willpower."},
+{p:3,q:"The overall progression of professional responsibility in the course is best summarised as:",
+ o:["Due care → accountability for failure → proactive prevention of harm",
+    "Profit → schedule → quality",
+    "Design → build → maintain",
+    "Collect → store → delete"],
+ e:"The arc runs from meeting standards (due care), to owning avoidable failures (accountability), to actively preventing harm before it happens (proactive responsibility). It's a ladder from minimal compliance up to full ethical agency — and the course clearly values climbing toward the top."},
+{p:3,q:"When a case asks 'why did nobody speak up?', the strongest answer diagnoses barriers at:",
+ o:["All three levels: personal, cognitive, and organizational",
+    "Only the personal level",
+    "Only the technical level",
+    "Only the environmental level"],
+ e:"Silence usually has layered causes: personal (fear, self-interest), cognitive (microscopic vision, egocentrism), and organizational (authority pressure, groupthink). A full-marks answer names all three and proposes a fix for each — because addressing only one leaves the others intact and the silence recurs."},
+{p:3,q:"Whistleblowing is best understood in this course as:",
+ o:["A last-resort act of proactive responsibility when internal channels fail",
+    "The first thing to do in any disagreement",
+    "Always unprofessional",
+    "A purely legal, not ethical, matter"],
+ e:"Whistleblowing sits at the top of proactive responsibility: when you have raised a serious risk through proper internal channels and been ignored, protecting the public may require going outside — to a regulator or the public. It's a last resort, not a first move, but the duty to public welfare can require it."},
+{p:3,q:"Which best explains why 'I met the minimum standard' can still be irresponsible?",
+ o:["Due care can require exceeding the minimum when foreseeable harm demands it",
+    "Standards are never relevant",
+    "Minimums are always sufficient",
+    "Responsibility ends at compliance"],
+ e:"Professional responsibility isn't box-ticking. When you can foresee harm that the minimum standard doesn't prevent, due care obliges you to do more. Hiding behind 'I did the minimum' while foreseeing danger is a failure of responsibility, not a defence — competence includes judgement about when the minimum isn't enough."},
+
+/* ================= PART 5 ================= */
+{p:4,q:"Collecting only what is lawful, necessary, and minimal — with meaningful choice — is the principle of:",
+ o:["Respect freedom (data minimization)",
+    "Serve society",
+    "Traceable responsibility",
+    "Govern the process"],
+ e:"'Respect freedom' is the front line of data ethics: gather only data that is lawful, genuinely necessary, and minimal, and give people real choice (informed consent, opt-out). It limits harm at the source — data you never collected can't be leaked, misused, or sold. Minimization is the single most protective habit in the life cycle."},
+{p:4,q:"Encryption, access control, logging, and audits fall under which data-ethics principle?",
+ o:["Protect technically",
+    "Respect freedom",
+    "Serve society",
+    "Promote fairness and access"],
+ e:"'Protect technically' covers the engineering safeguards around data you hold: secure design, restricting who can access it, encrypting it, and keeping logs and audits so misuse is detectable. A breach usually signals a failure here. Consent without technical protection is empty; both are required."},
+{p:4,q:"The sequence acquisition → cleaning → storage → transfer → sharing → analysis → deletion is captured by:",
+ o:["Govern the process (the data life cycle)",
+    "Respect freedom",
+    "Serve society",
+    "Promote fairness and access"],
+ e:"'Govern the process' means ethical duties span the WHOLE data life cycle, from how data is acquired all the way to how it is deleted. Each stage has its own risks (e.g., insecure transfer, over-broad sharing, indefinite retention). The key exam point: duties do NOT end once data is lawfully collected."},
+{p:4,q:"Documenting who made each data decision, with what authority, is which principle?",
+ o:["Make responsibility traceable",
+    "Serve society",
+    "Respect freedom",
+    "Promote fairness and access"],
+ e:"'Make responsibility traceable' requires that decisions, authority, and accountability be documented, so that when something goes wrong you can identify who was responsible and why. Without traceability, blame diffuses and no one answers for harm — the data equivalent of collective responsibility."},
+{p:4,q:"Reducing discrimination, exclusion, and the digital divide is the principle of:",
+ o:["Promote fairness and access",
+    "Protect technically",
+    "Govern the process",
+    "Respect freedom"],
+ e:"'Promote fairness and access' targets bias and exclusion: algorithms shouldn't discriminate, and the benefits of data systems shouldn't be confined to the already-advantaged (the 'digital divide'). It connects data ethics to justice — who is harmed by biased systems, and who is left out entirely."},
+{p:4,q:"Building a safe, trustworthy, equal, and inclusive data environment is the principle of:",
+ o:["Serve society",
+    "Respect freedom",
+    "Protect technically",
+    "Govern the process"],
+ e:"'Serve society' is the overarching aim: data systems should ultimately make society safer, more trustworthy, more equal, and more inclusive — not just profitable or convenient for the collector. It's the yardstick against which the other five principles are means to an end."},
+{p:4,q:"The PRISM case is used mainly to illustrate the tension between:",
+ o:["Security/order and freedom/transparency/due process",
+    "Two competing encryption standards",
+    "Cost and schedule",
+    "Authorship and citation"],
+ e:"PRISM is the public-governance case: large-scale data collection justified as security, but with little transparency, consent, or due process. It dramatizes the core governance question of Part 5 — how can convenience, order, and security coexist with freedom, transparency, and rights? Security claims don't automatically override those rights."},
+{p:4,q:"Which is one of the three big questions of information and big-data ethics?",
+ o:["Who may collect, own, infer, share, or sell data about a person?",
+    "Which programming language runs fastest?",
+    "How many servers fit in a rack?",
+    "Which cloud vendor is cheapest?"],
+ e:"The three big questions are: (1) data rights and privacy — who may collect/own/infer/share/sell personal data; (2) algorithmic fairness and safety — who prevents bias, error, and breaches; (3) public governance — how security and order coexist with freedom and due process. The listed answer is question (1)."},
+{p:4,q:"Once data has been lawfully collected, an engineer's ethical duties toward it:",
+ o:["Continue across storage, sharing, analysis, and deletion",
+    "End immediately",
+    "Transfer entirely to the user",
+    "Apply only if a breach occurs"],
+ e:"Lawful collection is only the first stage. Duties persist through storage (secure it), sharing (limit and justify it), analysis (avoid bias and misuse), and deletion (don't keep it forever). The 'govern the process' principle exists precisely to stop people thinking the ethics ends at the point of collection."},
+{p:4,q:"Indefinite retention of personal data most directly conflicts with:",
+ o:["Govern the process (retention limits and deletion)",
+    "Serve society only",
+    "Prevention first",
+    "Continuous improvement"],
+ e:"Keeping data forever violates life-cycle governance, which calls for retention limits and proper deletion. Indefinite storage expands the 'attack surface' (more to breach), enables function creep (using it for new purposes), and denies people the right to be forgotten. Deletion is an ethical act, not an afterthought."},
+{p:4,q:"A hiring algorithm that systematically down-ranks one group signals a failure of which principle first?",
+ o:["Promote fairness and access (algorithmic bias)",
+    "Respect freedom",
+    "Serve society only",
+    "Govern the process only"],
+ e:"Systematic disadvantage to a group is algorithmic bias — a fairness-and-access failure. It also touches 'protect technically' (was the model tested for bias?) and 'traceable responsibility' (who is accountable?), but the primary ethical wrong is discrimination, which the fairness principle exists to prevent."},
+{p:4,q:"Sharing collected data with an outside firm for a purpose users never agreed to violates chiefly:",
+ o:["Respect freedom (consent) and govern the process (sharing limits)",
+    "Continuous improvement",
+    "Prevention first",
+    "Holistic assessment"],
+ e:"Using data for an undisclosed new purpose breaks informed consent (respect freedom) and exceeds justified sharing (govern the process). This 'function creep' — data collected for one reason repurposed for another — is a central data-ethics hazard, and consent obtained for purpose A doesn't cover purpose B."},
+
+/* ================= PART 6 ================= */
+{p:5,q:"Inventing data that was never actually collected is:",
+ o:["Fabrication",
+    "Falsification",
+    "Plagiarism",
+    "A minor questionable practice"],
+ e:"Fabrication = making up data or results that were never obtained. It's the 'F' in FFP and a bright-line form of research misconduct, because it poisons the scientific record with pure fiction. Distinguish it carefully from falsification (altering REAL data) — fabrication invents from nothing."},
+{p:5,q:"Manipulating or altering real data or results to fit a desired conclusion is:",
+ o:["Falsification",
+    "Fabrication",
+    "Plagiarism",
+    "Responsible conduct"],
+ e:"Falsification = manipulating real data, images, or results (selectively deleting inconvenient points, tampering with figures) so they say something they don't. Unlike fabrication (invented from nothing), falsification distorts genuine data. Both are misconduct; the distinction is a favourite exam point."},
+{p:5,q:"Using another person's work, words, or ideas without proper credit is:",
+ o:["Plagiarism",
+    "Fabrication",
+    "Falsification",
+    "A conflict of interest"],
+ e:"Plagiarism = presenting others' work, words, or ideas as your own without attribution. It's the third bright line of FFP. It's a violation regardless of intent or amount, which is why careful citation is a core integrity habit, not an optional courtesy."},
+{p:5,q:"'FFP,' the three canonical forms of research misconduct, stands for:",
+ o:["Fabrication, Falsification, Plagiarism",
+    "Fraud, Forgery, Piracy",
+    "Fabrication, Fairness, Privacy",
+    "Falsification, Fairness, Plagiarism"],
+ e:"FFP = Fabrication (inventing data), Falsification (manipulating real data), Plagiarism (uncredited use of others' work). These are the clearest, most serious integrity violations. If a question describes inventing, altering, or stealing intellectual work, it's testing FFP."},
+{p:5,q:"Weak record-keeping and selective use of data are classified as:",
+ o:["Questionable research practices (the gray zone)",
+    "Fabrication",
+    "Plagiarism",
+    "Responsible conduct"],
+ e:"These sit in the middle tier — questionable practices. They're not the FFP bright lines, but they corrode integrity and can slide into misconduct (selective data use without a documented rule becomes falsification). The gray zone is dangerous precisely because it feels minor and is easy to rationalise."},
+{p:5,q:"Listing a senior colleague who did no work as a co-author is:",
+ o:["Inappropriate (gift) authorship — a questionable practice",
+    "Falsification",
+    "Data minimization",
+    "Responsible conduct"],
+ e:"Gift or honorary authorship credits someone who didn't genuinely contribute, misrepresenting who did the work and who is accountable for it. It's a questionable authorship practice that violates integrity norms about honest credit. Authorship should track real contribution, not status or favour."},
+{p:5,q:"Honesty, accuracy, objectivity, completeness of data, and reproducibility define which tier?",
+ o:["Responsible conduct (the 'good' tier)",
+    "Questionable practices",
+    "Research misconduct",
+    "Procedural justice"],
+ e:"These qualities define responsible conduct — the top tier of the integrity ladder. They're the positive standard: report honestly and accurately, stay objective, keep complete data, and make work reproducible. The other tiers (questionable practices, misconduct) are departures from this ideal."},
+{p:5,q:"Fake references, sham citations, and citation manipulation are classified as:",
+ o:["Research misconduct",
+    "Responsible conduct",
+    "Procedural justice",
+    "Environmental responsibility"],
+ e:"Along with missing citations, these citation abuses are treated as research misconduct because they corrupt the scholarly record and dishonestly inflate or misattribute credit and support. Integrity applies not just to your data but to how you represent the work of others and the evidence base."},
+{p:5,q:"An unmanaged conflict of interest (e.g., a funder shaping your conclusions) primarily violates:",
+ o:["Objectivity",
+    "Reproducibility only",
+    "Data minimization",
+    "Prevention first"],
+ e:"When a financial or personal interest secretly shapes your conclusions, the casualty is objectivity — you're no longer reporting what the evidence shows but what serves the interest. The remedy is disclosure and management of the conflict, not pretending it doesn't exist. Undisclosed COIs are a core integrity failure."},
+{p:5,q:"The three questions for case analysis, in order, are:",
+ o:["Facts &amp; roles → Values &amp; impacts → Action &amp; reasons",
+    "Cost → Schedule → Quality",
+    "Collect → Store → Delete",
+    "Decide → Justify → Forget"],
+ e:"The case method: (1) establish facts and roles — what happened, who holds knowledge/power/responsibility; (2) weigh values and impacts — who benefits/loses, which values conflict; (3) choose action and reasons — the defensible option, plus how to prevent recurrence. This is the backbone of every case answer."},
+{p:5,q:"'Prevent recurrence' as a lesson for the future means:",
+ o:["Identify personal, organizational, and institutional causes and fix each",
+    "Wait for the next incident",
+    "Delete the evidence",
+    "Blame one person and move on"],
+ e:"Preventing recurrence means tracing the causes at every level — individual, organizational, institutional — and improving controls, training, review, and communication to close each gap. Blaming a single 'bad apple' while leaving the system unchanged guarantees the problem returns."},
+{p:5,q:"'Fill policy vacuums' means:",
+ o:["Propose new rules with clear owners, triggers, procedures, and enforcement",
+    "Ignore the missing rules",
+    "Leave policy to chance",
+    "Punish individuals without changing rules"],
+ e:"Where no rule existed to prevent the harm, a strong answer proposes a concrete new policy — specifying who owns it, what triggers it, the procedure, and how it's enforced. Vague calls for 'better ethics' score poorly; naming an actual, enforceable rule is what earns marks and actually prevents recurrence."},
+{p:5,q:"Deleting data points that contradict your hypothesis, with no documented reason, is:",
+ o:["Falsification",
+    "Acceptable rounding",
+    "Plagiarism",
+    "Data minimization"],
+ e:"Dropping inconvenient real data without a pre-stated, documented statistical rule manipulates the result toward the answer you wanted — that's falsification, even though you invented nothing. The fix is to keep all data and exclude points only under a transparent, pre-registered rule that you record."},
+{p:5,q:"Why is academic/research integrity framed as building TRUST?",
+ o:["Science and engineering rely on others being able to trust reported results",
+    "Because trust is legally required in all cases",
+    "Because integrity has no practical effect",
+    "Because trust only matters to funders"],
+ e:"The entire enterprise of science and engineering depends on people trusting that reported data and methods are honest and reproducible. Misconduct doesn't just harm one paper — it corrupts the shared record everyone builds on. That's why integrity is treated as foundational infrastructure, not a personal nicety."},
+{p:5,q:"The safest response when a supervisor pressures you toward a questionable practice is to:",
+ o:["Keep complete records, follow documented rules, and consult a research-integrity officer if needed",
+    "Comply quietly to protect your position",
+    "Do it once and never again",
+    "Delete your data to avoid conflict"],
+ e:"Integrity is protected by transparency: keep all data, follow pre-stated and documented rules, and if pressure persists, escalate to a research-integrity officer or ombudsperson. This mirrors proactive responsibility from Part 4 — you don't quietly comply with wrongdoing, and you use the proper channels to resist it."}
+];
+
+const TF=[
+/* PART 1 */
+{p:0,s:"If a design is technically feasible, that alone makes it ethically acceptable.",a:false,e:"FALSE. This confuses two separate judgments. Feasibility means it can be built and will work; acceptability asks whether it should be built given who benefits, who is put at risk, whether they consented, and what the lasting effects are. Feasibility is necessary but never sufficient for acceptability — the course's central claim."},
+{p:0,s:"Engineering is a social practice that distributes benefits, risks, power, and responsibility.",a:true,e:"TRUE. Engineering connects people, nature, and institutions, and each decision hands out benefits and risks unequally while concentrating power and responsibility. That distribution is what gives engineering its moral weight and is why it needs ethics at all."},
+{p:0,s:"The three defining features of engineering ethics are cost, schedule, and quality.",a:false,e:"FALSE. Those three are the project-management 'triple constraint.' The three features of engineering ETHICS are multiple (conflicting) values, multiple affected actors, and pervasive uncertainty — the conditions that make ethical judgment necessary and difficult."},
+{p:0,s:"In the four-step method, you clarify the facts before identifying the ethical issue.",a:true,e:"TRUE. The order is FICD: Facts → Issue → Compare → Decide. You cannot correctly identify the ethical problem or the conflicting values until you've established what actually happened and who is involved. Facts always come first."},
+{p:0,s:"Because engineering decisions are technical, engineers bear no responsibility for their social effects.",a:false,e:"FALSE. Precisely because those decisions distribute risk and harm, engineers are moral agents, not neutral tools. 'I just built what I was told' fails ethically because the engineer helped shape who is exposed to danger."},
+{p:0,s:"Engineering creates economic, social, ecological, cultural, scientific, and political value.",a:true,e:"TRUE. Value is multi-dimensional, which is exactly why values conflict. A project strong on economic value may be weak on ecological or social value, forcing trade-offs that must be justified rather than ignored."},
+
+/* PART 2 */
+{p:1,s:"Risk is defined as probability multiplied by loss.",a:true,e:"TRUE. Risk = probability × loss. This is why a low-probability event with catastrophic loss can still be an unacceptable risk — you cannot dismiss rare failures when the potential harm is severe."},
+{p:1,s:"Risk governance is a single approval step completed before construction begins.",a:false,e:"FALSE. It's a continuous cycle: identify/assess → communicate/decide → respond/monitor, then loop again. The 'respond and monitor' stage — warnings, emergency plans, learning from near-misses — proves it never truly ends."},
+{p:1,s:"Under 'human welfare first,' people may be treated as cost variables when the total benefit is large.",a:false,e:"FALSE. That is the exact reasoning the principle forbids. People are ends in themselves; you cannot offset foreseeable deaths against savings as if lives were tradeable line items, no matter how large the aggregate benefit."},
+{p:1,s:"Organizational pressure that causes a failure is a human source of risk.",a:true,e:"TRUE. Human uncertainty includes design bias, poor workmanship, communication breakdown, and organizational pressure. These human factors often defeat sound technical design and are among the deepest causes of real disasters."},
+{p:1,s:"Those who bear a project's risks are entitled to information, participation, and compensation.",a:true,e:"TRUE. This is the 'fair distribution' requirement. Imposing risk on people who get no benefit, no voice, and no compensation is unjust even if the overall cost-benefit looks positive."},
+{p:1,s:"An engineer's duty to public safety ranks below loyalty to the employer.",a:false,e:"FALSE. Social responsibility places public safety, health, and welfare ABOVE organizational loyalty. This is what justifies refusing to sign off on unsafe work and, as a last resort, whistleblowing."},
+{p:1,s:"A flood exceeding a structure's design threshold is an example of environmental uncertainty.",a:true,e:"TRUE. Environmental uncertainty covers natural extremes — floods, earthquakes, storms — that exceed the conditions a system was designed for. It teaches humility about design assumptions and the need for conservative margins."},
+{p:1,s:"Holistic assessment means evaluating only the technical specifications of a design.",a:false,e:"FALSE. Holistic assessment is the opposite: it weighs technical, social, AND ecological effects together. A narrow technical evaluation that ignores pollution, displacement, or long-term harm is exactly what holistic assessment guards against."},
+
+/* PART 3 */
+{p:2,s:"Technology is often morally neutral as a tool; its value depends on purpose, use, and context.",a:true,e:"TRUE. The same capability can help or harm depending on how, why, and on whom it is used. This blocks both 'technology is always good' and 'always bad,' focusing ethics on use and context."},
+{p:2,s:"A NIMBY conflict concentrates a project's burdens on a nearby community while spreading its benefits widely.",a:true,e:"TRUE. 'Not In My Back Yard' is the classic distributive-justice structure: dispersed benefits, concentrated local burden — usually on those with the least power to object."},
+{p:2,s:"Procedural justice is mainly about who gets the benefits and who bears the burdens.",a:false,e:"FALSE. That's distributive justice (the outcome). Procedural justice is about the fairness of the PROCESS — the right to know, informed consent, and meaningful participation. A case can fail on one, the other, or both."},
+{p:2,s:"Externalities such as pollution and displacement should be counted in ethical evaluation.",a:true,e:"TRUE. Externalities are real social costs imposed on others even when they don't appear on the project's balance sheet. Ignoring them makes a harmful project look profitable; ethical evaluation must internalise them."},
+{p:2,s:"As long as short-term efficiency is high, irreversible consequences can be ignored.",a:false,e:"FALSE. Irreversibility raises the ethical stakes rather than lowering them. Some harms — a flooded valley, an extinct species, a destroyed community — can never be undone, so they must weigh heavily, not be traded away for short-term efficiency."},
+{p:2,s:"Something legal is automatically ethically acceptable.",a:false,e:"FALSE. Legality is a floor, not a ceiling. Permits and laws can lag behind current knowledge and fairness, so 'it's legal' can still be unjust — for instance, discharging pollution under an outdated permit onto an unconsulted community."},
+
+/* PART 4 */
+{p:3,s:"Proactive responsibility means disclosing risk and challenging unsafe decisions before harm occurs.",a:true,e:"TRUE. It's the highest level of professional responsibility — acting as an active guardian of public welfare in advance, up to whistleblowing if internal channels fail, rather than merely reacting to blame afterward."},
+{p:3,s:"Groupthink is a personal barrier caused mainly by individual self-interest.",a:false,e:"FALSE. Groupthink is an ORGANIZATIONAL barrier: the group's desire for harmony suppresses dissent and criticism. Self-interest and fear are personal barriers; groupthink is a property of the group's dynamics."},
+{p:3,s:"Microscopic vision means focusing on one's narrow task while ignoring system-level effects.",a:true,e:"TRUE. It's a cognitive barrier: zooming in on your slice of the work so the whole-system consequences go unseen. Combined with egocentrism, it lets specialists each do 'their part' right while a disaster assembles in the gaps."},
+{p:3,s:"Due care requires following professional standards and preventing foreseeable harm.",a:true,e:"TRUE. Due care is the baseline level of professional responsibility. When foreseeable harm demands it, due care can even require exceeding the minimum standard — competence includes judging when the minimum isn't enough."},
+{p:3,s:"Fear and self-deception are examples of organizational barriers.",a:false,e:"FALSE. Fear, self-interest, self-deception, and ignorance are PERSONAL barriers (inside the individual). Organizational barriers are structural: authority pressure, information silos, and groupthink."},
+{p:3,s:"Whistleblowing is a first response to any workplace disagreement.",a:false,e:"FALSE. Whistleblowing is a LAST resort within proactive responsibility — used after raising a serious risk through proper internal channels has failed. It's justified by the duty to public welfare, but it is not the opening move."},
+
+/* PART 5 */
+{p:4,s:"Once data is collected lawfully, the engineer's ethical duties toward it end.",a:false,e:"FALSE. Duties span the entire life cycle: acquisition, cleaning, storage, transfer, sharing, analysis, and deletion. Lawful collection is only the first stage — securing, limiting sharing, avoiding biased analysis, and deleting responsibly all follow."},
+{p:4,s:"'Respect freedom' calls for lawful, necessary, and minimal data collection with meaningful choice.",a:true,e:"TRUE. This is data minimization plus genuine consent. Collecting less at the source is the most protective habit in the whole life cycle — data never collected can't be breached, misused, or sold."},
+{p:4,s:"Encryption and access control belong to the 'protect technically' principle.",a:true,e:"TRUE. Secure design, access control, encryption, logging, and audits are the technical safeguards around held data. A breach typically indicates a failure of exactly this principle."},
+{p:4,s:"The PRISM case shows that security concerns automatically outweigh transparency and due process.",a:false,e:"FALSE. PRISM is a cautionary example, not a justification. It shows the danger of letting security claims override freedom, transparency, consent, and due process. The governance challenge is to balance them, not to let security win by default."},
+{p:4,s:"Reducing the digital divide falls under 'promote fairness and access.'",a:true,e:"TRUE. Fairness and access targets discrimination, exclusion, and the digital divide — ensuring data systems don't only benefit the already-advantaged or discriminate against particular groups."},
+{p:4,s:"Keeping personal data indefinitely is consistent with good life-cycle governance.",a:false,e:"FALSE. 'Govern the process' calls for retention limits and proper deletion. Indefinite storage enlarges the breach surface, enables function creep, and denies people the right to have data removed."},
+
+/* PART 6 */
+{p:5,s:"Fabrication and falsification are both forms of research misconduct.",a:true,e:"TRUE. Together with plagiarism they form the FFP trio of bright-line misconduct. Fabrication invents data from nothing; falsification manipulates real data; both corrupt the record."},
+{p:5,s:"Selective data use and inappropriate authorship are misconduct on par with fabrication.",a:false,e:"FALSE. They are questionable practices (the gray zone), not the FFP bright lines — though they can slide into misconduct. Selective data use without a documented rule, for instance, becomes falsification."},
+{p:5,s:"Responsible conduct requires honesty, objectivity, complete data, and reproducibility.",a:true,e:"TRUE. These qualities define the top tier of the integrity ladder — the positive standard that the questionable and misconduct tiers fall short of."},
+{p:5,s:"Gift authorship — crediting someone who did no work — is consistent with research integrity.",a:false,e:"FALSE. Gift/honorary authorship misrepresents who did the work and who is accountable for it, violating integrity norms. Authorship should track genuine contribution, not seniority or favour."},
+{p:5,s:"Deleting data that contradicts your hypothesis, without a documented reason, is falsification.",a:true,e:"TRUE. Removing inconvenient real data with no pre-stated, recorded rule manipulates the result — falsification — even though nothing was invented. Keep all data; exclude only under a transparent, documented rule."},
+{p:5,s:"A complete case answer ends by proposing how to prevent recurrence and fill policy gaps.",a:true,e:"TRUE. 'Lessons for the future' — tracing causes, proposing enforceable policy with clear owners, and explaining how to implement it — is how a full-marks case answer closes. An answer that doesn't look forward is incomplete."},
+{p:5,s:"An unmanaged conflict of interest chiefly threatens the objectivity of your conclusions.",a:true,e:"TRUE. When a hidden financial or personal interest shapes what you conclude, objectivity is the casualty — you report what serves the interest rather than what the evidence shows. Disclosure and management are the remedy."}
+];
+
+/* ============ CASES ============ */
+const CASES=[
+ {label:"Case 01 · Safety & Risk",title:"The Overheating Battery",
+  scenario:"You are an engineer on an e-scooter battery team. Tests show that in hot climates about 1 in 8,000 packs can overheat and catch fire. Marketing wants a region-wide launch before summer; your manager calls the rate 'statistically tiny' and says a firmware limiter can ship later. Riders won't be told. What do you do, and why?",
+  model:[["Facts & roles","A severe fire risk (~1/8,000 in heat) exists. The manager holds schedule pressure; you hold the test data; riders and bystanders are uninformed risk bearers; marketing wants speed."],
+   ["Stakeholders & conflict","Public safety vs. commercial schedule. Riders bear a severe harm without information or consent. Human welfare first and prevention first both point to fixing before launch."],
+   ["Principles","Risk = probability × loss: the loss (fire/injury) is severe, so even low probability is unacceptable. Fair distribution demands informing risk bearers. A 'patch later' launch fails prevention-first."],
+   ["Decision & reasons","Document the defect in writing; escalate through formal channels with the data; refuse safety sign-off until it is fixed or reliably mitigated (ship the limiter first, add heat cutoffs, warnings, recall plan). If overruled internally, proactive responsibility justifies alerting the regulator — public welfare outranks employer loyalty."],
+   ["Prevention","Independent safety sign-off insulated from marketing deadlines; a defect-escalation policy with clear owners and triggers; post-launch monitoring with a pre-defined recall threshold."]]},
+ {label:"Case 02 · Value & Justice",title:"The Highway Through the Neighborhood",
+  scenario:"A new highway cuts city-wide commute times but demolishes part of a low-income neighborhood and routes heavy traffic past its remaining homes and school. Residents weren't consulted, the impact study isn't public, and compensation was set by the city alone. Officials cite 'the greater good.' Analyze and recommend a path forward.",
+  model:[["Facts & roles","City-wide commuters benefit; one low-income community loses homes and gains pollution/noise/danger. The city controls the unpublished study, the compensation, and the decision; residents had no voice."],
+   ["Stakeholders & conflict","Distributive injustice (dispersed benefits, concentrated burdens on the least powerful — a NIMBY structure) compounded by procedural injustice (no right to know, no consent, no participation). 'Greater good' cannot erase either."],
+   ["Principles","Count externalities — health, displacement, school-zone safety, long-term community damage, some of it irreversible. Procedural justice demands transparency and participation; distributive justice demands fair burden-sharing and real compensation."],
+   ["Decision & reasons","Pause approval; publish the impact study; hold genuine consultation; renegotiate compensation WITH residents (relocation support, mitigation like barriers/rerouting, revenue sharing) rather than a unilateral figure. The project may proceed, but only through a process the affected can accept as fair — that is what makes it publicly defensible."],
+   ["Prevention","Mandatory public disclosure of impact assessments; enforceable participation requirements; a standing grievance and review mechanism; equity screening for projects that burden vulnerable groups."]]},
+ {label:"Case 03 · Professional Ethics",title:"The Warning Nobody Wanted",
+  scenario:"Days before a stadium roof opens, a structural engineer finds the snow-load margin is thinner than code assumes under a rare storm. Her manager says the opening is booked, re-analysis is 'probably unnecessary,' and raising it will embarrass the firm. Colleagues stay quiet. Using the barriers framework, explain what's happening and what she should do.",
+  model:[["Facts & roles","A possible under-margin exists before a public opening. The manager applies schedule + reputation pressure; colleagues are silent; the engineer holds the concern; the public are the risk bearers."],
+   ["Barriers at play","Personal: fear of embarrassment/retaliation. Cognitive: microscopic vision — treating it as 'just the calc,' not a public-safety issue. Organizational: authority pressure and groupthink silencing dissent."],
+   ["Principles","Duty of care and prevention-first require resolving foreseeable harm before opening; public welfare outranks the firm's reputation; proactive responsibility means raising it now, not after a failure."],
+   ["Decision & reasons","Put the concern and calculations in writing; request formal independent re-analysis; decline to certify until resolved. Counter each barrier: act despite the fear (personal), reframe it as a system/public issue (cognitive), invoke formal safety procedures that outrank informal pressure (organizational). Escalate to the building authority if the firm refuses."],
+   ["Prevention","Independent structural review before public occupancy; a protected channel for raising safety concerns; sign-off authority separated from commercial pressure; a culture and policy that rewards rather than punishes dissent."]]},
+ {label:"Case 04 · Data Ethics",title:"The Helpful Health App",
+  scenario:"A hospital rolls out an app collecting patients' location, activity, and medication data 'to improve care.' Enrollment is automatic, data is kept indefinitely, and it's shared with an analytics partner for a product they also sell. Patients can't opt out. A breach later exposes 60,000 records. Evaluate against the data life-cycle principles and recommend reforms.",
+  model:[["Facts & roles","The hospital and an analytics firm collect sensitive health data from all patients; enrollment is automatic; retention is indefinite; sharing is commercial; there is no opt-out; a breach exposed 60,000 records. Patients bear all the risk."],
+   ["Stakeholders & conflict","Patient privacy and autonomy vs. institutional/commercial convenience. Sensitive data + no consent + indefinite retention + commercial sharing is a high-risk combination."],
+   ["Principles violated","Respect freedom (collection is neither minimal nor consented, no opt-out); Protect technically (the breach shows weak security/access control/audit); Govern the process (indefinite storage, opaque sharing, no deletion rule); Traceable responsibility (unclear accountability); Fairness (surveillance risk, potential discrimination). It echoes the PRISM lesson: convenience/security cannot override consent and due process."],
+   ["Decision & reasons","Notify affected patients and investigate accountability now; minimize collection to what each care function truly needs; make participation opt-in with informed consent; set retention limits and deletion schedules; encrypt, restrict access, log and audit; publish and constrain the analytics contract; add oversight with patient representation."],
+   ["Prevention","A data-governance policy with named owners, breach-response triggers and deadlines, independent audits, and transparency reporting; privacy-by-design review before any future rollout."]]},
+ {label:"Case 05 · Academic Integrity",title:"The Inconvenient Outliers",
+  scenario:"A grad student's 40-sample study has 5 outliers that undercut the hypothesis. Her advisor, facing a funding deadline, tells her to drop them 'because the sensor was probably off' (no calibration issue was ever logged), phrase the conclusion the way the funder prefers, and add a senior professor who did no work as co-author. Identify each integrity problem and what she should do.",
+  model:[["Facts & roles","The student holds the data; the advisor holds power plus a conflict of interest (deadline + funder-friendly result); an uninvolved professor would gain undeserved authorship."],
+   ["Integrity problems","(1) Dropping outliers with no documented instrument fault = falsification (manipulating results). (2) Shaping the conclusion to please the funder = an unmanaged conflict of interest violating objectivity. (3) Gift authorship for a non-contributor = inappropriate authorship. (4) The missing calibration log already breaches complete-records and reproducibility."],
+   ["Principles","Responsible conduct requires honesty, accuracy, objectivity, complete data, and reproducibility; FFP marks the bright lines this behaviour crosses (into falsification)."],
+   ["Decision & reasons","Keep all data; report with the outliers included, or exclude only under a pre-stated, documented statistical rule; test and log the calibration claim empirically; decline the gift author, citing authorship standards; if pressured, consult the research-integrity officer or ombudsperson. Integrity outranks the deadline."],
+   ["Prevention","Data-management plans and instrument logs; pre-registered outlier rules; written authorship criteria; disclosure and management of funding conflicts; a safe reporting channel and integrity training."]]},
+ {label:"Case 06 · Risk & Vulnerable Groups",title:"The Software Update That Can Wait",
+  scenario:"An autonomous-delivery-robot company discovers its obstacle-detection model misclassifies wheelchairs as static objects in low light. A fix exists but would delay a major city rollout by six weeks. Leadership proposes launching now and patching 'over the air' within a month, without disclosing the limitation to the city. Analyze.",
+  model:[["Facts & roles","A safety-critical perception flaw disproportionately endangers wheelchair users in low light. Leadership holds schedule pressure; the city and pedestrians are uninformed risk bearers; engineers hold the finding."],
+   ["Stakeholders & conflict","Public safety — and specifically a vulnerable group — vs. rollout schedule. Launching without disclosure denies the city informed consent and concentrates risk on those least able to avoid it."],
+   ["Principles","Risk = probability × loss, with a severe, group-specific loss. Human welfare first, prevention first, and fair distribution all favour fixing first. Non-disclosure violates transparency and due care; targeting a vulnerable group also raises fairness/justice concerns."],
+   ["Decision & reasons","Deploy the fix before launch, or restrict operation to conditions where the flaw is absent (e.g., daylight only) with clear disclosure to the city; document and escalate; refuse an undisclosed 'patch later' launch. If overruled, escalate to the regulator — public welfare outranks the schedule."],
+   ["Prevention","Pre-launch safety gates that block deployment on known safety-critical defects; explicit fairness testing for vulnerable groups; disclosure duties to public authorities; monitored rollout with rollback triggers."]]},
+ {label:"Case 07 · Justice & Environment",title:"The Cheaper Discharge",
+  scenario:"A factory can cut costs sharply by discharging treated-but-not-fully-clean wastewater into a river upstream of a farming village during the dry season. It is within the letter of an outdated permit. The village depends on the river; no one has consulted them. Managers argue it's legal and boosts local employment. Analyze.",
+  model:[["Facts & roles","The firm gains cost savings and cites legality and jobs; the downstream village bears water-quality and health risk; they were not consulted. The permit is outdated relative to current knowledge."],
+   ["Stakeholders & conflict","Distributive injustice (benefits to the firm/economy, burdens on the village) and procedural injustice (no consultation, no consent). 'Legal' is not the same as 'ethically acceptable.'"],
+   ["Principles","Feasibility/legality ≠ ethical acceptability. Count externalities (health, livelihoods, ecological harm, potential irreversibility). Environmental responsibility covers ecosystems and future generations; fair distribution requires informing and protecting the risk bearers."],
+   ["Decision & reasons","Do not treat the outdated permit as ethical cover; improve treatment to a genuinely safe standard; consult the village and disclose the data; if the firm refuses, escalate to environmental authorities. Jobs do not justify imposing undisclosed health risk on an unconsulted community."],
+   ["Prevention","Update permits to current science with enforcement; mandatory downstream-community consultation; ongoing water-quality monitoring and public reporting; a clear accountability chain for discharge decisions."]]},
+ {label:"Case 08 · Professional Ethics & Whistleblowing",title:"The Ignored Memo",
+  scenario:"An engineer repeatedly warns in writing that a pressure-vessel weld procedure is inadequate. Management acknowledges the memos but does nothing, citing cost. The vessel is due to ship to a client next week. Internal escalation has been exhausted. What are the engineer's obligations now?",
+  model:[["Facts & roles","The engineer has documented a serious, potentially life-threatening defect; management knows but declines to act for cost reasons; internal channels are exhausted; the client and end-users are the risk bearers."],
+   ["Stakeholders & conflict","Public/worker safety vs. cost and organizational loyalty. The engineer has done due care and accountability; the remaining question is proactive responsibility."],
+   ["Principles","Social responsibility places public safety above employer loyalty. Because internal escalation has genuinely failed and the harm is severe and foreseeable, this is exactly the last-resort situation where whistleblowing is justified."],
+   ["Decision & reasons","Keep the documented trail; make one final, clearly stated internal escalation to the highest responsible authority; if still ignored, report to the relevant regulator or the client, as protecting the public now outranks loyalty. Refuse to certify the vessel as safe."],
+   ["Prevention","A protected whistleblowing channel with anti-retaliation guarantees; independent safety authority over shipment sign-off; a policy that a documented unresolved safety concern blocks shipment by default."]]},
+ {label:"Case 09 · Data Ethics & Algorithmic Fairness",title:"The Biased Screening Model",
+  scenario:"A university deploys an AI model to screen scholarship applicants. Auditing reveals it systematically scores applicants from one region lower, because it learned from historically biased award data. Administrators say the model is 'just using the data' and is efficient. Analyze.",
+  model:[["Facts & roles","The model reproduces historical bias against one region; administrators defend it as data-driven and efficient; applicants from that region are harmed and largely unaware; the university holds power and accountability."],
+   ["Stakeholders & conflict","Fairness/equal access vs. efficiency and convenience. 'The data made it do it' hides a human choice to deploy a biased system without correction."],
+   ["Principles","Promote fairness and access is directly violated (algorithmic discrimination, worsening the divide). Protect technically and traceable responsibility are implicated (was it tested for bias? who is accountable?). Efficiency does not justify discrimination."],
+   ["Decision & reasons","Pause use of the model for decisions; audit and correct for the bias (rebalance data, add fairness constraints, human review); disclose the issue to affected applicants and offer remedy; document accountability. If it can't be made fair, don't use it."],
+   ["Prevention","Mandatory bias testing before deployment; ongoing fairness audits; human oversight of automated decisions; a governance body with authority to halt biased systems; transparency to affected people."]]},
+ {label:"Case 10 · Integrity & Pressure",title:"The Reproducibility Problem",
+  scenario:"A team's headline result won't reproduce in a follow-up run. A senior member suggests quietly reporting only the original successful run and omitting the failures, arguing 'the first result is probably the real one' and a retraction would hurt everyone's careers. What should the team do?",
+  model:[["Facts & roles","The key result is not reproducible; a senior member proposes hiding the failed runs; careers and reputations are at stake; the wider scientific community will rely on whatever is reported."],
+   ["Integrity problems","Reporting only the successful run while hiding failures is selective reporting sliding into falsification, and it violates honesty, completeness, and reproducibility. Career protection is an unmanaged conflict of interest shaping the reporting."],
+   ["Principles","Responsible conduct demands complete, honest, reproducible reporting. Integrity is about preserving trust in the shared record — hiding non-reproducibility corrupts what others build on."],
+   ["Decision & reasons","Report the full picture, including the failed reproductions; investigate why the result is unstable before making claims; if the published result is unsupported, issue a correction or retraction. Short-term reputational cost does not justify corrupting the record; transparency is the integrity-preserving path."],
+   ["Prevention","Pre-registration and full reporting of all runs; independent replication before headline claims; a lab culture that treats honest correction as normal, not career-ending; clear authorship and accountability for reported results."]]}
+];
+
+/* ============ UNIVERSAL METHOD STEPS ============ */
+const FLOW=[
+ {h:"Facts — establish what actually happened",p:"Separate what you know from what's assumed or missing. Lay out the timeline, the roles, and who holds knowledge, power, and responsibility. Note what information is being hidden or withheld.",ask:"Ask: What are the hard facts? What's missing or concealed? Who decided, and who knew?"},
+ {h:"Stakeholders — map everyone affected",p:"List every party touched directly or indirectly, and deliberately flag the ones with the least voice — displaced residents, downstream communities, future generations. They are usually the moral centre of the case.",ask:"Ask: Who benefits? Who bears the burden or risk? Whose interests are being ignored?"},
+ {h:"Conflict — name the clashing values in one sentence",p:"State the ethical tension crisply: safety vs. schedule, privacy vs. convenience, honesty vs. career, public good vs. local burden. A sharply named conflict is what the rest of the answer analyses.",ask:"Ask: Which values collide here, and why can't all of them be satisfied at once?"},
+ {h:"Principles — map to the course frameworks",p:"Attach the right tools and use their exact vocabulary: the 6 acceptable-risk requirements, risk = probability × loss, distributive vs. procedural justice, the 6 data life-cycle principles, the 3 barriers (personal/cognitive/organizational), or FFP for integrity.",ask:"Ask: Which course concept is this case built to test? Name it explicitly."},
+ {h:"Decision — choose the publicly defensible action",p:"Pick what you could justify to any reasonable outsider. Be concrete: document in writing, escalate through the correct channel, refuse sign-off, and state the fallback if internal channels fail (go to the regulator). Public welfare outranks loyalty.",ask:"Ask: Which choice survives public scrutiny — and what exactly do I do, step by step?"},
+ {h:"Prevention — look forward and fill the gap",p:"Close every answer here. Identify personal, organizational, AND institutional causes; propose a concrete policy fix with clear owners, triggers, and enforcement; and say how you'd justify and implement it.",ask:"Ask: How do we stop this recurring, and what enforceable rule fills the vacuum?"}
+];
+
+/* ============ FULL-MARKS GUIDE ============ */
+const GUIDE_STUDY=[
+ ["Learn the frameworks, not the stories","The exam will give you an unseen scenario, so memorising specific cases is useless. What transfers is the toolkit: the 6 risk requirements, the 2 justice types, the 6 data principles, the 3 barriers, FFP, and the FICD / three-question method. Drill these until you can recall them cold."],
+ ["Build a one-page 'trigger sheet'","For each framework, write the cue that tells you it applies. Fire/injury/defect → risk requirements + probability×loss. Community harmed/not consulted → distributive + procedural justice. App/data/breach → 6 data principles. Nobody spoke up → 3 barriers. Invented/altered/stolen work → FFP. Recognising the trigger fast is half the battle."],
+ ["Practise naming the conflict in one sentence","Weak answers describe; strong answers diagnose. Train yourself to compress any scenario into 'X vs. Y' (safety vs. schedule, privacy vs. convenience). Everything else in your answer hangs off that sentence."],
+ ["Always rehearse the forward-looking ending","Most marks are lost at the end. Practise finishing every case with prevention: personal + organizational + institutional causes, then a concrete, enforceable policy. Make this ending automatic so you never run out of time before reaching it."],
+ ["Time-box your structure","In the exam, spend ~2 minutes outlining F-S-C-P-D-P before writing. A visible structure earns rubric marks even if your prose is rushed. Graders reward the skeleton."]
+];
+const GUIDE_ANSWER=[
+ ["1. Open by stating the conflict","One sentence: 'This case pits public safety against schedule pressure.' It signals to the grader you've identified the ethical core immediately."],
+ ["2. Lay out facts and roles","Briefly: what happened, who holds knowledge/power/responsibility, and crucially what information is missing or withheld. Flag the risk bearers."],
+ ["3. Map stakeholders, surface the voiceless","Name who benefits, who bears burdens, and who had no say. Explicitly mention the low-power group — this is where the marks and the ethics live."],
+ ["4. Apply the named framework with its vocabulary","Don't just say 'it's unfair' — say 'this is a distributive-justice problem (dispersed benefit, concentrated burden) compounded by a procedural-justice failure (no consent or participation).' Exact terms earn exact marks."],
+ ["5. Decide, concretely and defensibly","State the action a reasonable outsider would accept: document, escalate through the right channel, refuse unsafe sign-off, and give the fallback (regulator) if internal channels fail. Put public welfare above loyalty explicitly."],
+ ["6. Close with prevention and policy","Trace causes at personal, organizational, and institutional levels; propose one enforceable rule with an owner, a trigger, and enforcement; note how you'd implement it. This forward-looking close is what separates a good answer from a full-marks answer."]
+];
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let answered=0,correct=0;
+const totalQ=MCQ.length+TF.length;
+document.getElementById('scoreTotal').textContent=totalQ;
+function bump(r){answered++;if(r)correct++;document.getElementById('scoreAnswered').textContent=answered;document.getElementById('scoreCorrect').textContent=correct;}
+function partHeader(pi,count){const d=document.createElement('div');d.className='parthead';d.innerHTML='<span class="pnum">PART '+(pi+1)+'</span><h3>'+PARTS[pi]+'</h3><span class="cnt">'+count+' Qs</span>';return d;}
+
+const mcqList=document.getElementById('mcqList');
+let qc=0;
+for(let pi=0;pi<PARTS.length;pi++){
+  const group=MCQ.filter(m=>m.p===pi);
+  mcqList.appendChild(partHeader(pi,group.length));
+  group.forEach(item=>{
+    qc++;
+    const pairs=item.o.map((txt,idx)=>({txt,correct:idx===0}));
+    shuffle(pairs);
+    const card=document.createElement('div');card.className='q';
+    card.innerHTML='<div class="qhead"><div class="qnum">'+qc+'</div><div class="qtext">'+item.q+'</div></div>';
+    const opts=document.createElement('div');opts.className='opts';
+    pairs.forEach((pr,idx)=>{
+      const b=document.createElement('button');b.className='opt';
+      b.innerHTML='<span class="lt">'+String.fromCharCode(65+idx)+'</span><span>'+pr.txt+'</span>';
+      b.onclick=()=>{
+        if(opts.dataset.done)return;opts.dataset.done=1;
+        const isRight=pr.correct;
+        [...opts.children].forEach((c,ci)=>{c.classList.add('locked');
+          if(pairs[ci].correct)c.classList.add('correct');
+          if(ci===idx&&!isRight)c.classList.add('wrong');});
+        const ex=card.querySelector('.expl');
+        ex.classList.add('show',isRight?'right':'rong');
+        ex.querySelector('.verdict').textContent=isRight?"✓ Correct — here's why":"✗ Not quite — here's why";
+        bump(isRight);
+      };
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+    const ex=document.createElement('div');ex.className='expl';
+    ex.innerHTML='<div class="verdict"></div>'+item.e;
+    card.appendChild(ex);
+    mcqList.appendChild(card);
+  });
+}
+
+const tfList=document.getElementById('tfList');
+let tc=0;
+for(let pi=0;pi<PARTS.length;pi++){
+  const group=TF.filter(m=>m.p===pi);
+  tfList.appendChild(partHeader(pi,group.length));
+  group.forEach(item=>{
+    tc++;
+    const card=document.createElement('div');card.className='q';
+    card.innerHTML='<div class="qhead"><div class="qnum">'+tc+'</div><div class="qtext">'+item.s+'</div></div>';
+    const opts=document.createElement('div');opts.className='opts tf-btns';
+    [['True',true],['False',false]].forEach(([label,val])=>{
+      const b=document.createElement('button');b.className='opt';b.innerHTML='<span>'+label+'</span>';
+      b.onclick=()=>{
+        if(opts.dataset.done)return;opts.dataset.done=1;
+        const isRight=val===item.a;
+        [...opts.children].forEach(c=>c.classList.add('locked'));
+        opts.children[item.a?0:1].classList.add('correct');
+        if(!isRight)b.classList.add('wrong');
+        const ex=card.querySelector('.expl');
+        ex.classList.add('show',isRight?'right':'rong');
+        ex.querySelector('.verdict').textContent=isRight?"✓ Correct — here's why":"✗ Not quite — here's why";
+        bump(isRight);
+      };
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+    const ex=document.createElement('div');ex.className='expl';
+    ex.innerHTML='<div class="verdict"></div>'+item.e;
+    card.appendChild(ex);
+    tfList.appendChild(card);
+  });
+}
+
+const caseList=document.getElementById('caseList');
+CASES.forEach(c=>{
+  const card=document.createElement('div');card.className='case';
+  card.innerHTML='<div class="clabel">'+c.label+'</div><h3>'+c.title+'</h3><div class="scenario">'+c.scenario+'</div><button class="reveal-btn">Reveal model analysis ▾</button><div class="model"></div>';
+  const model=card.querySelector('.model');
+  c.model.forEach(pair=>{const d=document.createElement('div');d.className='step';d.innerHTML='<div class="st">'+pair[0]+'</div><p>'+pair[1]+'</p>';model.appendChild(d);});
+  const btn=card.querySelector('.reveal-btn');
+  btn.onclick=()=>{const open=model.classList.toggle('show');btn.textContent=open?'Hide model analysis ▴':'Reveal model analysis ▾';};
+  caseList.appendChild(card);
+});
+
+const flowSteps=document.getElementById('flowSteps');
+FLOW.forEach(s=>{const d=document.createElement('div');d.className='flowstep';d.innerHTML='<h4>'+s.h+'</h4><p>'+s.p+'</p><div class="ask">'+s.ask+'</div>';flowSteps.appendChild(d);});
+
+const gs=document.getElementById('guideStudy');
+GUIDE_STUDY.forEach(g=>{const d=document.createElement('div');d.className='gstep';d.innerHTML='<h4>'+g[0]+'</h4><p>'+g[1]+'</p>';gs.appendChild(d);});
+const ga=document.getElementById('guideAnswer');
+GUIDE_ANSWER.forEach(g=>{const d=document.createElement('div');d.className='gstep';d.innerHTML='<h4>'+g[0]+'</h4><p>'+g[1]+'</p>';ga.appendChild(d);});
+
+document.querySelectorAll('nav button').forEach(b=>{
+  b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+    b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('show');
+    window.scrollTo({top:0,behavior:'smooth'});};
+});
+
+</script></body></html>
